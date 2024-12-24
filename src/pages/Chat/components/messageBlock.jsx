@@ -1,12 +1,34 @@
-const MessageBlock = () => {
-    return (
-        <div>
-            <form action="">
-                <input type="text" />
-                <button>Send</button>
-            </form>
-        </div>
-    )
+import { useState } from "react";
+
+const MessageBlock = ({socket}) => {
+  const [message, setMessage] = useState("");
+
+  const handleSend = (e) => {
+    e.preventDefault();
+    if (message.trim() && localStorage.getItem("user")){
+        socket.emit("message", {
+            text: message,
+            name: localStorage.getItem("user"),
+            id: `${socket.id}-${Math.random()}`,
+            socketID: socket.id
+        })
+    }
+    setMessage("");
+  };
+  return (
+    <div>
+      <form onSubmit={handleSend}>
+        <input
+          type="text"
+          value={message}
+          onChange={(e) => {
+            setMessage(e.target.value);
+          }}
+        />
+        <button>Send</button>
+      </form>
+    </div>
+  );
 };
 
 export default MessageBlock;

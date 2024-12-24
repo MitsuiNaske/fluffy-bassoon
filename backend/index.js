@@ -1,9 +1,6 @@
 const express = require("express");
-
 const app = express();
-
 const PORT = 5000;
-
 const http = require("http").Server(app);
 const cors = require("cors");
 const socketIO = require("socket.io")(http, {
@@ -20,6 +17,11 @@ app.get("api", (req, res) => {
 
 socketIO.on("connection", (socket) => {
     console.log(`${socket.id} user connected to chat`)
+    socket.on("message", (data) => {
+      console.log(data)
+      socketIO.emit("response", data)
+    })
+
     socket.on("disconnect", (socket) => {
         console.log(`${socket.id} disconnect`)
     })
