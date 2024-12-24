@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 
 const Body = ({ messages }) => {
   const navigate = useNavigate();
-  console.log(messages)
   const handleLeave = () => {
     localStorage.removeItem("user");
     navigate("/");
@@ -15,24 +14,23 @@ const Body = ({ messages }) => {
       </header>
 
       <div>
-        {
-        messages.map((message) => {
+        {messages.map((message) =>
           message.name === localStorage.getItem("user") ? (
-            <div key={message.id}>
+            <div key={message.id} className="message self">
               <p>You</p>
               <div>
                 <p>{message.text}</p>
               </div>
             </div>
           ) : (
-            <div key={message.id}>
+            <div key={message.id} className="message other">
               <p>{message.name}</p>
               <div>
                 <p>{message.text}</p>
               </div>
             </div>
-          );
-        })}
+          )
+        )}
       </div>
     </>
   );

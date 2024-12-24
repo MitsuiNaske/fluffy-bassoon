@@ -8,11 +8,11 @@ const ChatPage = ({ socket }) => {
 
   useEffect(() => {
     socket.on("response", (data) => setMessages([...messages, data]))
-  }, []);
+  }, [socket, messages]);
 
   return (
     <div className="flex h-svh p-5">
-      <Slidebar className="" />
+      <Slidebar className="" socket={socket} />
       <main>
         <Body messages={messages} />
         <MessageBlock socket={socket} />

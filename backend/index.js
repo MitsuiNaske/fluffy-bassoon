@@ -9,23 +9,36 @@ const socketIO = require("socket.io")(http, {
   },
 });
 
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  })
+);
+
 app.get("api", (req, res) => {
   res.json({
     message: "Hello",
   });
 });
 
-socketIO.on("connection", (socket) => {
-    console.log(`${socket.id} user connected to chat`)
-    socket.on("message", (data) => {
-      console.log(data)
-      socketIO.emit("response", data)
-    })
+const Users = []
 
-    socket.on("disconnect", (socket) => {
-        console.log(`${socket.id} disconnect`)
-    })
-})
+socketIO.on("connection", (socket) => {
+  console.log(`${socket.id} user connected to chat`);
+
+  socket.on("message", (data) => {
+    socketIO.emit("response", data);
+  });
+
+  socket.on("newUser", (data) => {
+    Users.push(data)
+    socketIO.emit("responseNewUser", Users)
+  })
+
+  socket.on("disconnect", () => {
+    console.log(`${socket.id} disconnect`);
+  });
+});
 
 http.listen(PORT, () => {
   console.log("Server working...");
