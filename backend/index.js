@@ -35,8 +35,14 @@ socketIO.on("connection", (socket) => {
     socketIO.emit("responseNewUser", Users)
   })
 
+  socket.on("disconnectChat", (userDelete) => {
+    const index = Users.find((user) => userDelete.user === user.user)
+    Users.splice(Users.indexOf(index), 1)
+    socketIO.emit("responseNewUser", Users)
+  });
+
   socket.on("disconnect", () => {
-    console.log(`${socket.id} disconnect`);
+    console.log(`${socket.id} user disconnected from chat`);
   });
 });
 

@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 
-const Body = ({ messages }) => {
+const Body = ({ messages, socket }) => {
   const navigate = useNavigate();
+
   const handleLeave = () => {
     localStorage.removeItem("user");
+    socket.emit("disconnectChat", { userDelete: localStorage.getItem("user") });
     navigate("/");
   };
 

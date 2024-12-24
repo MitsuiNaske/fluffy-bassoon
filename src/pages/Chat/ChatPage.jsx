@@ -12,9 +12,9 @@ const ChatPage = ({ socket }) => {
 
   return (
     <div className="flex h-svh p-5">
-      <Slidebar className="" socket={socket} />
+      <Slidebar socket={socket} />
       <main>
-        <Body messages={messages} />
+        <Body messages={messages} socket={socket} />
         <MessageBlock socket={socket} />
       </main>
     </div>
