@@ -39,19 +39,33 @@ app.get("api", (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
+  if (!req.body) {
+    return res.status(400).json({
+      message: "All fields are required",
+    })
+  }
   const { username, password, confirmPassword } = req.body;
-  if (!username || !password || !confirmPassword) {
+  console.log(req.body)
+  if (!username || !password || !confirmPassword || password !== confirmPassword) {
     return res.status(400).json({
       message: "All fields (username, password, confirmPassword) are required",
     });
   }
   try {
     const userid = Uid.generate();
-    await User.create({
-      uid: userid,
-      username: username,
-      password: password,
-    });
+    const user = await User.findOne({ where: { username } });
+    if (user) {
+      return res.status(400).json({
+        message: "User already exists",
+      });
+    } else {
+      await User.create({
+        uid: userid,
+        username: username,
+        password: password,
+      });
+    }
+
     res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
     console.error(err);
@@ -94,6 +108,7 @@ socketIO.on("connection", (socket) => {
     console.log(`${socket.id} user connected to chat`);
     socketIO.emit("responseNewUser", Users);
   } catch (err) {
+    console.log(err);
     socket.close(1008, "Unauthorized");
     return;
   }
