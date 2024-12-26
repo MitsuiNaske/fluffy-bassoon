@@ -4,7 +4,7 @@ const RegisterPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [confirmPassword, setConfirmPassword] = useState(false);
   return (
     <div>
       <h3>Name:</h3>
@@ -36,7 +36,7 @@ const RegisterPage = () => {
 
       <h3>Confirm password:</h3>
       <label htmlFor="confirmPassword"></label>
-      <input type="password" id="confirmPassword"  />
+      <input type="password" id="confirmPassword" onChange={(event) => (event.target.value === password ? setConfirmPassword(true) : setConfirmPassword(false))} />
 
       <button type="submit">Register</button>
     </div>
