@@ -3,6 +3,10 @@ import { useState } from "react";
 const MessageBlock = ({socket}) => {
   const [message, setMessage] = useState("");
 
+  const isTyping = () => {
+    socket.emit("typing", `${localStorage.getItem("user")} is typing` );
+  }
+
   const handleSend = (e) => {
     e.preventDefault();
     if (message.trim() && localStorage.getItem("user")){
@@ -24,6 +28,7 @@ const MessageBlock = ({socket}) => {
           onChange={(e) => {
             setMessage(e.target.value);
           }}
+          onKeyDown={isTyping}
         />
         <button>Send</button>
       </form>

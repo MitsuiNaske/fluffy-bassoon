@@ -25,7 +25,8 @@ const Users = []
 
 socketIO.on("connection", (socket) => {
   console.log(`${socket.id} user connected to chat`);
-
+  socketIO.emit("responseNewUser", Users)
+  
   socket.on("message", (data) => {
     socketIO.emit("response", data);
   });
@@ -39,6 +40,10 @@ socketIO.on("connection", (socket) => {
     const index = Users.find((user) => userDelete.user === user.user)
     Users.splice(Users.indexOf(index), 1)
     socketIO.emit("responseNewUser", Users)
+  });
+
+  socket.on("typing", (data) => {
+    socket.broadcast.emit("responseTyping", data);
   });
 
   socket.on("disconnect", () => {

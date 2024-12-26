@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-const Body = ({ messages, socket }) => {
+const Body = ({ messages, socket, status }) => {
   const navigate = useNavigate();
 
   const handleLeave = () => {
@@ -33,6 +33,9 @@ const Body = ({ messages, socket }) => {
             </div>
           )
         )}
+        <div>
+          <p>{status}....</p>
+        </div>
       </div>
     </>
   );
