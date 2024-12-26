@@ -26,7 +26,8 @@ const wsManager = new WebSocketManager();
 app.use(
   cors({
     origin: "http://localhost:5173",
-  })
+  }),
+  express.json()
 );
 
 /*  api requests   */
@@ -38,25 +39,20 @@ app.get("api", (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
-  if (!req.body.username || !req.body.password) {
-    res.status(400).json({
-      message: "Invalid data",
-    });
-    return;
-  }
   const { username, password, confirmPassword } = req.body;
+  if (!username || !password || !confirmPassword) {
+    return res.status(400).json({
+      message: "All fields (username, password, confirmPassword) are required",
+    });
+  }
   try {
-    if (!confirmPassword) {
-      return res.status(400).json({ error: "Passwords do not match" });
-    } else {
-      const userid = Uid.generate();
-      await User.create({
-        uid: userid,
-        username: username,
-        password: password,
-      });
-      res.status(201).json({ message: "User registered successfully" });
-    }
+    const userid = Uid.generate();
+    await User.create({
+      uid: userid,
+      username: username,
+      password: password,
+    });
+    res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
     res.status(500).json({
       message: "Internal server error",
