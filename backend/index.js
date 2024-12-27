@@ -36,11 +36,16 @@ app.post("/register", async (req, res) => {
   if (!req.body) {
     return res.status(400).json({
       message: "All fields are required",
-    })
+    });
   }
   const { username, password, confirmPassword } = req.body;
-  console.log(req.body)
-  if (!username || !password || !confirmPassword || password !== confirmPassword) {
+  console.log(req.body);
+  if (
+    !username ||
+    !password ||
+    !confirmPassword ||
+    password !== confirmPassword
+  ) {
     return res.status(400).json({
       message: "All fields (username, password, confirmPassword) are required",
     });
@@ -118,6 +123,18 @@ socketIO.on("connection", (socket) => {
     return;
   }
 
+  socket.on("verifyToken", (token) => {
+    try {
+      const userData = jwt.verify(token, SECRET_KEY);
+      console.log(`Token verified for user: ${userData.username}`);
+      socket.emit("tokenVerified", { success: true, user: userData });
+    } catch (err) {
+      console.error("Invalid token:", err.message);
+      socket.emit("tokenVerified", { success: false });
+      socket.disconnect(true);
+    }
+  });
+
   socket.on("message", (data) => {
     socketIO.emit("response", data);
   });
@@ -131,6 +148,10 @@ socketIO.on("connection", (socket) => {
     console.log(Users);
     console.log(data);
     socketIO.emit("responseNewUser", Users);
+  });
+
+  socket.on("requestUsers", () => {
+    socket.emit("responseNewUser", Users);
   });
 
   socket.on("disconnectChat", (userDelete) => {

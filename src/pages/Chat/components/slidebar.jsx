@@ -10,10 +10,12 @@ const Slidebar = ({ socket }) => {
 
     socket.on("responseNewUser", handleNewUser);
 
+    socket.emit("requestUsers");
+
     return () => {
       socket.off("responseNewUser", handleNewUser);
     };
-  }, [socket, users]);
+  }, [socket]);
 
   return (
     <div className="flex flex-col shadow-lg shadow-gray-500 rounded-lg w-1/3  h-full gap-10">

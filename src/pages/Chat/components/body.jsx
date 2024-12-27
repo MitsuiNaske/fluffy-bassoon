@@ -34,7 +34,7 @@ const Body = ({ messages, socket, status }) => {
           )
         )}
         <div>
-          <p>{status}....</p>
+          {status && <p>{status}</p>}
         </div>
       </div>
     </>

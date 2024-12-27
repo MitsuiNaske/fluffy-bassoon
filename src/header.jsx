@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-const Header = ({socket}) => {
+const Header = ({socket, verifedToken}) => {
     const navigate = useNavigate();
 
     const handleSubmit = (e) => {
@@ -19,15 +19,22 @@ const Header = ({socket}) => {
 
             <nav className="">
                 <ul className="flex gap-10 text-xl">
-                    <li>
-                        <button onClick={handleSubmit}>Chat</button>
-                    </li>
-                    <li>
-                        <button onClick={() => navigate("/login")}>Login</button>
-                    </li>
-                    <li>
-                        <button onClick={() => navigate("/register")}>Register</button>
-                    </li>
+                    {verifedToken ? (
+                        <li>
+                            <button onClick={handleSubmit}>Chat</button>
+                        </li>
+                    ) : (
+                        <>
+                            <li>
+                                <button onClick={() => navigate("/login")}>Login</button>
+                            </li>
+                            <li>
+                                <button onClick={() => navigate("/register")}>Register</button>
+                            </li>
+                        </>
+                    )}
+                    
+                    
                 </ul>
             </nav>
         </header>

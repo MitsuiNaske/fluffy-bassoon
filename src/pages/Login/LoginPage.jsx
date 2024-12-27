@@ -19,6 +19,7 @@ const LoginPage = () => {
       sessionStorage.setItem("token", response.data.token);
       console.log("Login successful:", response.data);
       console.log("Username:", username);
+      window.location.reload()
     } catch (error) {
       console.error("Login error:", error.response?.data || error.message);
       setError(
