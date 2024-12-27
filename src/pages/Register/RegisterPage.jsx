@@ -4,7 +4,8 @@ const RegisterPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   return (
     <div>
       <h3>Name:</h3>

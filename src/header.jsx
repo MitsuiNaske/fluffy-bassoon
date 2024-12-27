@@ -1,7 +1,15 @@
 import { useNavigate } from "react-router-dom";
 
-const Header = () => {
+const Header = ({socket}) => {
     const navigate = useNavigate();
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        const username = localStorage.getItem("username")
+        const userid = localStorage.getItem("userid")
+        socket.emit("newUser", { username: username, socketID: userid })
+        navigate("/chat")
+      }
 
     return (
         <header className="flex justify-between items-center bg-blue-500 py-5 px-24 text-white">
@@ -12,7 +20,7 @@ const Header = () => {
             <nav className="">
                 <ul className="flex gap-10 text-xl">
                     <li>
-                        <button onClick={() => navigate("/chat")}>Chat</button>
+                        <button onClick={handleSubmit}>Chat</button>
                     </li>
                     <li>
                         <button onClick={() => navigate("/login")}>Login</button>

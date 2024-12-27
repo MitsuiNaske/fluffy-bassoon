@@ -2,13 +2,18 @@ import { useEffect, useState } from "react";
 
 const Slidebar = ({ socket }) => {
   const [users, setUsers] = useState([]);
-  useEffect(() => {
-    socket.on("responseNewUser", (data) =>
-      setUsers(data)
-    );
-  }, [socket, users]);
 
-  const filterUsers = users.filter((user, index, self) => index === self.findIndex((t) => t.user === user.user && t.socketID === user.socketID));
+  useEffect(() => {
+    const handleNewUser = (data) => {
+      setUsers(data);
+    };
+
+    socket.on("responseNewUser", handleNewUser);
+
+    return () => {
+      socket.off("responseNewUser", handleNewUser);
+    };
+  }, [socket, users]);
 
   return (
     <div className="flex flex-col shadow-lg shadow-gray-500 rounded-lg w-1/3  h-full gap-10">
@@ -16,13 +21,16 @@ const Slidebar = ({ socket }) => {
         Users
       </h4>
       <ul className="flex flex-wrap gap-5 text-2xl items-start px-2">
-        {filterUsers.map(user => (
-          <li className="pl-2 pr-3 py-1 shadow-gray-400 rounded-lg shadow-sm" key={user.socketID}>
-            {user.user}
+        {users.map((user) => (
+          <li
+            className="pl-2 pr-3 py-1 shadow-gray-400 rounded-lg shadow-sm"
+            key={user.socketID}
+          >
+            {user.username}
           </li>
         ))}
       </ul>
-    </div >
+    </div>
   );
 };
 
