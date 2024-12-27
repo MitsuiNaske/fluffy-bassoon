@@ -32,12 +32,6 @@ app.use(
 
 /*  api requests   */
 
-app.get("api", (req, res) => {
-  res.json({
-    message: "Hello",
-  });
-});
-
 app.post("/register", async (req, res) => {
   if (!req.body) {
     return res.status(400).json({
