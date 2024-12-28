@@ -7,15 +7,18 @@ const Slidebar = ({ socket }) => {
     const handleNewUser = (data) => {
       setUsers(data);
     };
-
+  
+    socket.emit("newUser", { user: localStorage.getItem("username") });
+  
     socket.on("responseNewUser", handleNewUser);
-
+  
     socket.emit("requestUsers");
-
+  
     return () => {
       socket.off("responseNewUser", handleNewUser);
     };
-  }, [socket]);
+  }, []);
+  
 
   return (
     <div className="flex flex-col shadow-lg shadow-gray-500 rounded-lg w-1/3  h-full gap-10">
@@ -28,7 +31,7 @@ const Slidebar = ({ socket }) => {
             className="pl-2 pr-3 py-1 shadow-gray-400 rounded-lg shadow-sm"
             key={user.socketID}
           >
-            {user.username}
+            {user.user}
           </li>
         ))}
       </ul>

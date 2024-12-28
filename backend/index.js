@@ -114,12 +114,14 @@ socketIO.on("connection", (socket) => {
   try {
     const userData = jwt.verify(token, SECRET_KEY);
     socket.userId = userData.id;
-
+  
     wsManager.addClient(userData.id, socket);
     console.log(`${socket.id} user connected to chat`);
+    
     socketIO.emit("responseNewUser", Users);
   } catch (err) {
-    socket.disconnect(1008, "Unauthorized");
+    console.error("Invalid token:", err.message);
+    socket.disconnect(true);
     return;
   }
 
@@ -140,24 +142,34 @@ socketIO.on("connection", (socket) => {
   });
 
   socket.on("newUser", (data) => {
-    if (Users.find((user) => user.user === data.user)) {
-      socketIO.emit("responseNewUser", Users);
+    if (!data.user || typeof data.user !== "string") {
+      console.warn("Invalid user data received:", data);
       return;
     }
-    Users.push(data);
-    console.log(Users);
-    console.log(data);
+  
+    const userExists = Users.some((user) => user.user === data.user);
+    if (!userExists) {
+      Users.push({ user: data.user, socketID: socket.id });
+    }
+  
+    console.log("Обновленный список пользователей:", Users);
+  
     socketIO.emit("responseNewUser", Users);
   });
+  
 
   socket.on("requestUsers", () => {
+    console.log("Список пользователей отправлен:", Users);
     socket.emit("responseNewUser", Users);
   });
 
-  socket.on("disconnectChat", (userDelete) => {
-    const index = Users.find((user) => userDelete.user === user.user);
-    Users.splice(Users.indexOf(index), 1);
-    socketIO.emit("responseNewUser", Users);
+  socket.on("disconnectChat", () => {
+    const index = Users.findIndex((user) => user.socketID === socket.id);
+    if (index !== -1) {
+      Users.splice(index, 1); 
+      console.log("Пользователь отключён. Список:", Users);
+      socketIO.emit("responseNewUser", Users);
+    }
   });
 
   socket.on("typing", (data) => {
@@ -165,7 +177,12 @@ socketIO.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log(`${socket.id} user disconnected from chat`);
+    const index = Users.findIndex((user) => user.socketID === socket.id);
+    if (index !== -1) {
+      Users.splice(index, 1); 
+      console.log(`Пользователь ${socket.id} отключён. Обновленный список:`, Users);
+      socketIO.emit("responseNewUser", Users);
+    }
   });
 });
 
