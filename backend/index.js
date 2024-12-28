@@ -152,7 +152,7 @@ socketIO.on("connection", (socket) => {
   });
 
   socket.on("message", (data) => {
-    logger.log(`Message from user ${socket.userId}: ${data}`);
+    logger.log(`Message from user ${socket.userId}: ${JSON.stringify(data)}`);
     socketIO.emit("response", data);
   });
 
