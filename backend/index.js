@@ -114,6 +114,74 @@ app.post("/login", async (req, res) => {
   }
 });
 
+app.delete("/account/delete", async (req, res) => {
+  const {userid, token} = req.headers;
+  if (!userid || !token) {
+    return res.status(400).json({
+      message: "All fields are required.",
+    });
+  }
+  try{
+    const userData = jwt.verify(token, SECRET_KEY);
+    if(userData.id !== userid){
+      return res.status(401).json({
+        message: "Unauthorized access.",
+      });
+    }
+    const user = await User.findOne({ where: { uid: userid } });
+    if (!user) {
+      return res.status(401).json({ error: "User not found." });
+    }
+    await User.destroy({ where: { uid: userid } });
+    res.status(200).json({ message: "User successfully deleted." });
+    logger.log(`User \"${user.username}\" successfully deleted with ID ${userid}.`);
+
+  }catch(error){
+    logger.error(error);
+    res.status(500).json({
+      message: "Internal server error.",
+    });
+  }
+});
+app.put("/account/edit", async (req, res) => {
+  const {userid, token} = req.headers;
+  if (!userid || !token) {
+    return res.status(400).json({
+      message: "All fields are required.",
+    });
+  }
+  try{
+    const userData = jwt.verify(token, SECRET_KEY);
+    if(userData.id !== userid){
+      return res.status(401).json({
+        message: "Unauthorized access.",
+      });
+    }
+    const user = await User.findOne({ where: { uid: userid } });
+    if (!user) {
+      return res.status(401).json({ error: "User not found." });
+    }
+    const { username, password, confirmPassword } = req.body;
+    if (!username || !password || !confirmPassword || password !== confirmPassword) {
+      return res.status(400).json({
+        message: "All fields (username, password, confirm password) are required.",
+      });
+    }
+    await User.update({
+      username: username,
+      password: password,
+    }, { where: { uid: userid } });
+    res.status(200).json({ message: "User successfully updated." });
+    logger.log(`User \"${username}\" successfully updated with ID ${userid}.`);
+
+  }catch(error){
+    logger.error(error);
+    res.status(500).json({
+      message: "Internal server error.",
+    });
+  }
+})
+
 /* WebSocket connections */
 const Users = [];
 
