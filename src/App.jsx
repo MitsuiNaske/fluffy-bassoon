@@ -33,7 +33,7 @@ function App() {
   }, [socket]);
 
   return (
-    <>
+    <div className="h-screen flex flex-col">
       <Header socket={socket} verifedToken={tokenVerified} />
       <Routes>
         {tokenVerified && (
@@ -46,7 +46,7 @@ function App() {
           </>
         )}
       </Routes>
-    </>
+    </div>
   );
 }
 

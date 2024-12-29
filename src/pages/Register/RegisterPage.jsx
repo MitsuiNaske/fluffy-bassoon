@@ -28,38 +28,95 @@ const RegisterPage = () => {
   };
 
   return (
-    <form onSubmit={handleRegister}>
-      <h3>Name:</h3>
-      <label htmlFor="name"></label>
-      <input
-        type="text"
-        id="name"
-        onChange={(event) => setName(event.target.value)}
-        value={name}
-      />
+    <div className="flex justify-center items-center h-screen bg-gray-100">
+      <div className="w-full max-w-sm bg-white p-8 rounded-lg shadow-lg">
+        <h2 className="text-3xl font-bold text-center mb-6">Register</h2>
 
-      <h3>Password:</h3>
-      <label htmlFor="password"></label>
-      <input
-        type="password"
-        id="password"
-        onChange={(event) => setPassword(event.target.value)}
-        value={password}
-      />
+        <form onSubmit={handleRegister} className="space-y-6">
+          {errors && (
+            <p className="text-red-500 text-center mb-4">{errors}</p>
+          )}
 
-      <h3>Confirm password:</h3>
-      <label htmlFor="confirmPassword"></label>
-      <input
-        type="password"
-        id="confirmPassword"
-        onChange={(event) => {
-          setConfirmPassword(event.target.value);
-        }}
-      />
+          <div>
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Username:
+            </label>
+            <input
+              type="text"
+              id="name"
+              onChange={(event) => setName(event.target.value)}
+              value={name}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter username"
+              aria-describedby="username-help"
+            />
+            <small
+              id="username-help"
+              className="text-xs text-gray-500 mt-1 block"
+            >
+              Your username for the account
+            </small>
+          </div>
 
-      <button type="submit">Register</button>
-      {errors && <p style={{ color: "red" }}>{errors}</p>}
-    </form>
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Password:
+            </label>
+            <input
+              type="password"
+              id="password"
+              onChange={(event) => setPassword(event.target.value)}
+              value={password}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter password"
+              aria-describedby="password-help"
+            />
+            <small
+              id="password-help"
+              className="text-xs text-gray-500 mt-1 block"
+            >
+              Your password for the account
+            </small>
+          </div>
+
+          <div>
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Confirm Password:
+            </label>
+            <input
+              type="password"
+              id="confirmPassword"
+              onChange={(event) => setConfirmPassword(event.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter password"
+              aria-describedby="confirmPassword-help"
+            />
+            <small
+              id="confirmPassword-help"
+              className="text-xs text-gray-500 mt-1 block"
+            >
+              Confirm your password
+            </small>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            Register
+          </button>
+        </form>
+      </div>
+    </div>
   );
 };
 
