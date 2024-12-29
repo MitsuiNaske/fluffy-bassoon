@@ -220,6 +220,7 @@ socketIO.on("connection", (socket) => {
   });
 
   socket.on("message", (data) => {
+    if(data.text.length > 5000) return logger.warn(`Message too long: ${data.text.length}/5000`);
     logger.log(`Message from user ${socket.userId}: ${JSON.stringify(data)}`);
     socketIO.emit("response", data);
   });

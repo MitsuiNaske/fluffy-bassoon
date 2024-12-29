@@ -10,6 +10,8 @@ const MessageBlock = ({ socket }) => {
   const handleSend = (e) => {
     e.preventDefault();
     if (message.trim() && localStorage.getItem("username")) {
+      if (message.length > 5000) return alert("Message too long 5000/5000");
+
       socket.emit("message", {
         text: message,
         name: localStorage.getItem("username"),
@@ -30,7 +32,13 @@ const MessageBlock = ({ socket }) => {
           type="text"
           value={message}
           placeholder="Type your message..."
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e) => {
+            if (e.target.value.length <= 5000) {
+              setMessage(e.target.value)
+            } else {
+              alert(`Message too long ${e.target.value.length}/5000`);
+            }
+          }}
           onKeyDown={isTyping}
         />
         <button
