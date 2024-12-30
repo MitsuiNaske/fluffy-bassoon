@@ -21,7 +21,7 @@ const Header = ({ socket, verifedToken }) => {
 
   return (
     <header className="flex justify-between items-center bg-blue-500 py-5 px-24 text-white h-18 transition-all">
-      <div>
+      <div onClick={verifedToken ? () => navigate("chat") : () => navigate("/login")} className="flex items-center gap-3 cursor-pointer">
         <img src="./src/assets/DM.svg" alt="Logo" className="h-10" />
       </div>
 
@@ -35,6 +35,14 @@ const Header = ({ socket, verifedToken }) => {
                   className="hover:text-2xl transition-all duration-400 ease-in-out transform hover:scale-105 focus:outline-none"
                 >
                   Chat
+                </button>
+              </li>
+              <li>
+              <button
+                  onClick={() => navigate("profileEdit")}
+                  className="hover:text-2xl transition-all duration-400 ease-in-out transform hover:scale-105 focus:outline-none"
+                >
+                  Profile
                 </button>
               </li>
               <li>

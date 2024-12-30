@@ -4,6 +4,7 @@ import socketIO from "socket.io-client";
 import Header from "./header";
 import Login from "./pages/Login/LoginPage";
 import Register from "./pages/Register/RegisterPage";
+import ProfileEdit from "./pages/Profile/ProfileEdit";
 import { useEffect, useState } from "react";
 
 const socket = socketIO.io("http://localhost:5000", {
@@ -37,7 +38,10 @@ function App() {
       <Header socket={socket} verifedToken={tokenVerified} />
       <Routes>
         {tokenVerified && (
-          <Route path="/chat" element={<ChatPage socket={socket} />} />
+          <>
+            <Route path="/chat" element={<ChatPage socket={socket} />} />
+            <Route path="/profileEdit" element={<ProfileEdit />} />
+          </>
         )}
         {!tokenVerified && (
           <>
