@@ -143,6 +143,7 @@ app.delete("/account/delete", async (req, res) => {
     });
   }
 });
+
 app.put("/account/edit", async (req, res) => {
   const {userid, token} = req.headers;
   if (!userid || !token) {
